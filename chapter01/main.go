@@ -32,11 +32,14 @@ func main() {
 
 	var results []Stock
 	for _, symbol := range stocks {
-		stock := fetchStockPrice(symbol)
-		results = append(results, stock)
+		go func(s string) {
+			stock := fetchStockPrice(symbol)
+			results = append(results, stock)
+		}(symbol)
 	}
 
 	elapsedTime := time.Since(start)
+	time.Sleep(4 * time.Second) // Goroutine 을 쉽게 기다리는법(좋지 않은 방법)
 
-	fmt.Printf("총 소요 시간 %v\n", elapsedTime)
+	fmt.Printf("총 소요 시간 :%v, 결과: %v\n", elapsedTime, results)
 }
